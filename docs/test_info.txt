@@ -7,3 +7,133 @@ Example: mockMvc.perform(post(...)...)
 
 A - Assert
 Example: .andExpect(status().isOk()) and verify(...)
+
+package com.sujon.analytics_engine.controller;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.sujon.analytics_engine.dto.DataAnalysisResponseDto;
+import com.sujon.analytics_engine.exception.BadRequestException;
+import com.sujon.analytics_engine.exception.NotFoundException;
+import com.sujon.analytics_engine.service.DataAnalysisService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.time.OffsetDateTime;
+import java.util.List;
+
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@ExtendWith(MockitoExtension.class)
+class DataAnalysisControllerTest {
+
+    @Mock
+    private DataAnalysisService dataAnalysisService;
+
+    @InjectMocks
+    private DataAnalysisController dataAnalysisController;
+
+    private MockMvc mockMvc;
+    private DataAnalysisResponseDto sampleResponse;
+
+    @BeforeEach
+    void setUp() {
+        mockMvc = MockMvcBuilders.standaloneSetup(dataAnalysisController).build();
+        sampleResponse = new DataAnalysisResponseDto(
+                1L,
+                100,
+                5,
+                5000L,
+                List.of(),
+                OffsetDateTime.now(),
+                false
+        );
+    }
+
+    @Test
+    void ingestAndAnalyzeCsv_shouldReturnResponse_whenValidCsvProvided() throws Exception {
+        String csvData = "name,age\nJohn,30\nJane,25";
+        when(dataAnalysisService.analyzeCsvData(csvData)).thenReturn(sampleResponse);
+
+        mockMvc.perform(post("/api/analysis/ingestCsv")
+                        .contentType("text/plain")
+                        .content(csvData))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.numberOfRows").value(100))
+                .andExpect(jsonPath("$.numberOfColumns").value(5));
+
+        verify(dataAnalysisService, times(1)).analyzeCsvData(csvData);
+    }
+
+    @Test
+    void getAnalysisById_shouldReturnResponse_whenIdExists() throws Exception {
+        when(dataAnalysisService.getAnalysisById(1L)).thenReturn(sampleResponse);
+
+        mockMvc.perform(get("/api/analysis/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L));
+
+        verify(dataAnalysisService, times(1)).getAnalysisById(1L);
+    }
+
+    @Test
+    void getAnalysisById_shouldReturn404_whenIdDoesNotExist() throws Exception {
+        when(dataAnalysisService.getAnalysisById(99L)).thenThrow(new NotFoundException("Not found"));
+
+        mockMvc.perform(get("/api/analysis/99"))
+                .andExpect(status().isNotFound());
+
+        verify(dataAnalysisService, times(1)).getAnalysisById(99L);
+    }
+
+    @Test
+    void downloadJson_shouldReturnJsonFile_whenIdExists() throws Exception {
+        when(dataAnalysisService.getAnalysisById(1L)).thenReturn(sampleResponse);
+
+        mockMvc.perform(get("/api/analysis/1/download.json"))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Disposition", "attachment; filename=\"analysis.json\""))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        verify(dataAnalysisService, times(1)).getAnalysisById(1L);
+    }
+
+    @Test
+    void downloadJson_shouldReturn404_whenIdDoesNotExist() throws Exception {
+        when(dataAnalysisService.getAnalysisById(99L)).thenThrow(new NotFoundException("Not found"));
+
+        mockMvc.perform(get("/api/analysis/99/download.json"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void deleteAnalysisById_shouldReturn204_whenIdExists() throws Exception {
+        doNothing().when(dataAnalysisService).deleteAnalysisById(1L);
+
+        mockMvc.perform(delete("/api/analysis/1"))
+                .andExpect(status().isNoContent());
+
+        verify(dataAnalysisService, times(1)).deleteAnalysisById(1L);
+    }
+
+    @Test
+    void deleteAnalysisById_shouldReturn404_whenIdDoesNotExist() throws Exception {
+        doThrow(new NotFoundException("Not found")).when(dataAnalysisService).deleteAnalysisById(99L);
+
+        mockMvc.perform(delete("/api/analysis/99"))
+                .andExpect(status().isNotFound());
+
+        verify(dataAnalysisService, times(1)).deleteAnalysisById(99L);
+    }
+}
