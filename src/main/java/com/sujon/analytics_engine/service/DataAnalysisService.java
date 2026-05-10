@@ -1,13 +1,13 @@
-package com.sujon.spring_data_analysis_api.service;
+package com.sujon.analytics_engine.service;
 
-import com.sujon.spring_data_analysis_api.controller.response.DataAnalysisResponse;
-import com.sujon.spring_data_analysis_api.exception.BadRequestException;
-import com.sujon.spring_data_analysis_api.exception.NotFoundException;
-import com.sujon.spring_data_analysis_api.model.ColumnStatistics;
-import com.sujon.spring_data_analysis_api.repository.ColumnStatisticsRepository;
-import com.sujon.spring_data_analysis_api.repository.DataAnalysisRepository;
-import com.sujon.spring_data_analysis_api.repository.entity.ColumnStatisticsEntity;
-import com.sujon.spring_data_analysis_api.repository.entity.DataAnalysisEntity;
+import com.sujon.analytics_engine.dto.DataAnalysisResponseDto;
+import com.sujon.analytics_engine.exception.BadRequestException;
+import com.sujon.analytics_engine.exception.NotFoundException;
+import com.sujon.analytics_engine.model.ColumnStatistics;
+import com.sujon.analytics_engine.repository.ColumnStatisticsRepository;
+import com.sujon.analytics_engine.repository.DataAnalysisRepository;
+import com.sujon.analytics_engine.repository.entity.ColumnStatisticsEntity;
+import com.sujon.analytics_engine.repository.entity.DataAnalysisEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -163,7 +163,7 @@ public class DataAnalysisService {
      * @return DataAnalysisResponse containing analysis results and metadata
      * @throws BadRequestException if the CSV data is null, blank, or invalid
      */
-    public DataAnalysisResponse analyzeCsvData(String data) {
+    public DataAnalysisResponseDto analyseCsvData(String data) {
 
         if (data == null || data.isBlank()) {
             throw new BadRequestException("Invalid CSV");
@@ -177,7 +177,7 @@ public class DataAnalysisService {
         String contentHash = sha256(normalizeForHash(data));
 
         return dataAnalysisRepository.findByContentHash(contentHash)
-                .map(existing -> new DataAnalysisResponse(
+                .map(existing -> new DataAnalysisResponseDto(
                         existing.getId(),
                         existing.getNumberOfRows(),
                         existing.getNumberOfColumns(),
@@ -216,7 +216,7 @@ public class DataAnalysisService {
      * @return DataAnalysisResponse containing the newly created analysis results
      * @throws BadRequestException if the CSV is malformed or contains blocked content
      */
-    private DataAnalysisResponse createNewAnalysis(String data, String contentHash) {
+    private DataAnalysisResponseDto createNewAnalysis(String data, String contentHash) {
 
         String[] lines = data.split("\\R", -1);
 
@@ -351,7 +351,7 @@ public class DataAnalysisService {
 
         columnStatisticsRepository.saveAll(columnStatisticsEntities);
 
-        return new DataAnalysisResponse(
+        return new DataAnalysisResponseDto (
                 dataAnalysisEntity.getId(),
                 numberOfRows,
                 numberOfColumns,
@@ -388,12 +388,12 @@ public class DataAnalysisService {
      * @return DataAnalysisResponse containing the analysis results
      * @throws NotFoundException if no analysis exists with the given ID
      */
-    public DataAnalysisResponse getAnalysisById(Long id) {
+    public DataAnalysisResponseDto getAnalysisById(Long id) {
 
         DataAnalysisEntity entity = dataAnalysisRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Analysis not found"));
 
-        return new DataAnalysisResponse(
+        return new DataAnalysisResponseDto(
                 entity.getId(),
                 entity.getNumberOfRows(),
                 entity.getNumberOfColumns(),

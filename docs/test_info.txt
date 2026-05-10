@@ -1,0 +1,9 @@
+When writing tests follow AAA
+A - Arrange
+Example: String csvData = ... and when(...).thenReturn(sampleResponse)
+
+A - Act
+Example: mockMvc.perform(post(...)...)
+
+A - Assert
+Example: .andExpect(status().isOk()) and verify(...)

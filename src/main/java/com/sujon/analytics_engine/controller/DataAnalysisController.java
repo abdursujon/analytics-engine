@@ -1,17 +1,16 @@
-package com.sujon.spring_data_analysis_api.controller;
+package com.sujon.analytics_engine.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.sujon.spring_data_analysis_api.controller.response.DataAnalysisResponse;
-import com.sujon.spring_data_analysis_api.exception.BadRequestException;
-import com.sujon.spring_data_analysis_api.exception.NotFoundException;
-import com.sujon.spring_data_analysis_api.service.DataAnalysisService;
+import com.sujon.analytics_engine.dto.DataAnalysisResponseDto;
+import com.sujon.analytics_engine.exception.BadRequestException;
+import com.sujon.analytics_engine.exception.NotFoundException;
+import com.sujon.analytics_engine.service.DataAnalysisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 /**
@@ -34,15 +33,12 @@ public class DataAnalysisController {
             consumes = {"text/plain", "text/csv"},
             produces = "application/json"
     )
-    public DataAnalysisResponse ingestAndAnalyzeCsv(@RequestBody String data) {
-        if (data.contains("Sonny Hayes")) {
-            throw new BadRequestException("CSV data containing 'Sonny Hayes' is not allowed");
-        }
-        return dataAnalysisService.analyzeCsvData(data);
+    public DataAnalysisResponseDto ingestAndAnalyzeCsv(@RequestBody String data) {
+        return dataAnalysisService.analyseCsvData(data);
     }
 
     @GetMapping("/{id}")
-    public DataAnalysisResponse getAnalysisById(@PathVariable Long id) {
+    public DataAnalysisResponseDto getAnalysisById(@PathVariable Long id) {
         return dataAnalysisService.getAnalysisById(id);
     }
 
@@ -50,7 +46,7 @@ public class DataAnalysisController {
     @GetMapping("/{id}/download.json")
     public ResponseEntity<byte[]> downloadJson(@PathVariable Long id) {
         try {
-            DataAnalysisResponse response = dataAnalysisService.getAnalysisById(id);
+            DataAnalysisResponseDto response = dataAnalysisService.getAnalysisById(id);
             ObjectMapper mapper = new ObjectMapper();
             mapper.registerModule(new JavaTimeModule());
             mapper.enable(SerializationFeature.INDENT_OUTPUT);

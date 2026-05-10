@@ -1,6 +1,6 @@
-package  com.sujon.spring_data_analysis_api.repository;
+package  com.sujon.analytics_engine.repository;
 
-import com.sujon.spring_data_analysis_api.repository.entity.DataAnalysisEntity;
+import com.sujon.analytics_engine.repository.entity.DataAnalysisEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.Optional;

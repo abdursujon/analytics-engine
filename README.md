@@ -1,6 +1,6 @@
-# Spring Data Analysis API
+# Analytics Engine
 
-<p>Welcome to the Spring Data Analysis API. 
+<p>Welcome to the Spring Analytics Engine API. 
 This project is a Spring Boot–based data analysis
 REST API that ingests CSV files and automatically profiles their structure and content. 
 The service extracts metadata such as column types, null counts, and statistical summaries,
@@ -62,7 +62,7 @@ In production environments, similar services often integrate with cloud storage 
 
 ---
 ## If you want to contribute to the project this is how you can get started
-- First clone the repo: git clone https://github.com/abdursujon/spring-data-analysis-api.git
+- First clone the repo: git clone https://github.com/abdursujon/analytics-engine.git
 
 ### Build the Project
 ```bash
@@ -151,4 +151,4 @@ You should see table as shown on the image:
 
 ## How to create a Jar 
 ./gradlew clean bootJar
-java -jar build/libs/spring-data-analysis-api.jar
+java -jar build/libs/analytics-engine.jar

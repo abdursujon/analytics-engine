@@ -1,8 +1,8 @@
-package com.sujon.spring_data_analysis_api;
+package com.sujon.analytics_engine;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sujon.spring_data_analysis_api.controller.response.DataAnalysisResponse;
-import com.sujon.spring_data_analysis_api.repository.DataAnalysisRepository;
+import com.sujon.analytics_engine.dto.DataAnalysisResponseDto;
+import com.sujon.analytics_engine.repository.DataAnalysisRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,9 +92,9 @@ class DataAnalysisApiValidationTest {
                                 .andExpect(status().isOk())
                                 .andReturn();
 
-                DataAnalysisResponse response = objectMapper.readValue(
+                DataAnalysisResponseDto response = objectMapper.readValue(
                                 result.getResponse().getContentAsString(),
-                                DataAnalysisResponse.class);
+                                DataAnalysisResponseDto.class);
 
                 assertThat(response.numberOfRows()).isEqualTo(0);
                 assertThat(response.numberOfColumns()).isEqualTo(3);
@@ -114,7 +114,7 @@ class DataAnalysisApiValidationTest {
                                 .contentType(TEXT_PLAIN)
                                 .content(csvData));
 
-                DataAnalysisResponse response = objectMapper.readValue(responseBody, DataAnalysisResponse.class);
+                DataAnalysisResponseDto response = objectMapper.readValue(responseBody, DataAnalysisResponseDto.class);
 
                 assertThat(response.numberOfRows()).isEqualTo(1);
                 assertThat(response.numberOfColumns()).isEqualTo(3);
@@ -130,7 +130,7 @@ class DataAnalysisApiValidationTest {
                                 .contentType(TEXT_PLAIN)
                                 .content(csvData));
 
-                DataAnalysisResponse response = objectMapper.readValue(responseBody, DataAnalysisResponse.class);
+                DataAnalysisResponseDto response = objectMapper.readValue(responseBody, DataAnalysisResponseDto.class);
 
                 assertThat(response.numberOfRows()).isEqualTo(4);
                 assertThat(response.numberOfColumns()).isEqualTo(4);
@@ -151,7 +151,7 @@ class DataAnalysisApiValidationTest {
                                 .contentType(TEXT_PLAIN)
                                 .content(csvData));
 
-                DataAnalysisResponse response = objectMapper.readValue(responseBody, DataAnalysisResponse.class);
+                DataAnalysisResponseDto response = objectMapper.readValue(responseBody, DataAnalysisResponseDto.class);
 
                 assertThat(response.numberOfRows()).isEqualTo(6);
                 assertThat(response.numberOfColumns()).isEqualTo(5);
@@ -173,7 +173,7 @@ class DataAnalysisApiValidationTest {
                                 .contentType(TEXT_PLAIN)
                                 .content(csvData));
 
-                DataAnalysisResponse response = objectMapper.readValue(responseBody, DataAnalysisResponse.class);
+                DataAnalysisResponseDto response = objectMapper.readValue(responseBody, DataAnalysisResponseDto.class);
 
                 assertThat(response.numberOfRows()).isEqualTo(10);
                 assertThat(response.numberOfColumns()).isEqualTo(6);

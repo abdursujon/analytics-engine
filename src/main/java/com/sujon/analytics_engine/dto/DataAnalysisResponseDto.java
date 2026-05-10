@@ -1,13 +1,14 @@
-package com.sujon.spring_data_analysis_api.controller.response;
+package com.sujon.analytics_engine.dto;
 
-import  com.sujon.spring_data_analysis_api.model.ColumnStatistics;
+import com.sujon.analytics_engine.model.ColumnStatistics;
+
 import java.time.OffsetDateTime;
 import java.util.List;
 
 /**
  * Immutable response payload representing a persisted CSV analysis result.
  */
-public record DataAnalysisResponse(
+public record DataAnalysisResponseDto(
         Long id,
         int numberOfRows,
         int numberOfColumns,
@@ -17,4 +18,3 @@ public record DataAnalysisResponse(
         boolean alreadyExists
 ) {
 }
-

@@ -50,6 +50,6 @@ tasks.named('test') {
 }
 
 bootJar {
-    archiveFileName = "spring-data-analysis-api.jar"
+    archiveFileName = "analytics-engine.jar"
 }
 

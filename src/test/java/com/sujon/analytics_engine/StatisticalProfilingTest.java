@@ -1,9 +1,9 @@
-package com.sujon.spring_data_analysis_api; // Package declaration for test class
+package com.sujon.analytics_engine; // Package declaration for test class
 
 import com.fasterxml.jackson.databind.ObjectMapper; // JSON parsing for response
-import com.sujon.spring_data_analysis_api.controller.response.DataAnalysisResponse; // Response DTO
-import com.sujon.spring_data_analysis_api.model.ColumnStatistics; // Column statistics model
-import com.sujon.spring_data_analysis_api.repository.DataAnalysisRepository; // Repository for cleanup
+import com.sujon.analytics_engine.dto.DataAnalysisResponseDto;
+import com.sujon.analytics_engine.model.ColumnStatistics; // Column statistics model
+import com.sujon.analytics_engine.repository.DataAnalysisRepository; // Repository for cleanup
 import org.junit.jupiter.api.BeforeEach; // Setup annotation
 import org.junit.jupiter.api.Test; // Test annotation
 import org.springframework.beans.factory.annotation.Autowired; // Dependency injection
@@ -75,7 +75,7 @@ class StatisticalProfilingTest {
                 .contentType(TEXT_PLAIN) // Set content type
                 .content(csvData)); // Set request body
 
-        DataAnalysisResponse response = objectMapper.readValue(responseBody, DataAnalysisResponse.class); // Parse response
+        DataAnalysisResponseDto response = objectMapper.readValue(responseBody, DataAnalysisResponseDto.class); // Parse response
 
         // Verify name column is not numeric (contains strings)
         ColumnStatistics nameStats = response.columnStatistics().stream() // Find name column stats
@@ -104,7 +104,7 @@ class StatisticalProfilingTest {
                 .contentType(TEXT_PLAIN) // Set content type
                 .content(csvData)); // Set request body
 
-        DataAnalysisResponse response = objectMapper.readValue(responseBody, DataAnalysisResponse.class); // Parse response
+        DataAnalysisResponseDto response = objectMapper.readValue(responseBody, DataAnalysisResponseDto.class); // Parse response
 
         // Test score column: values are 85,90,75,95,80,70,88,72,92,78
         ColumnStatistics scoreStats = response.columnStatistics().stream() // Find score column stats
@@ -133,7 +133,7 @@ class StatisticalProfilingTest {
                 .contentType(TEXT_PLAIN) // Set content type
                 .content(csvData)); // Set request body
 
-        DataAnalysisResponse response = objectMapper.readValue(responseBody, DataAnalysisResponse.class); // Parse response
+        DataAnalysisResponseDto response = objectMapper.readValue(responseBody, DataAnalysisResponseDto.class); // Parse response
 
         // Test score column: values are 85,90,75,95,80,70,88,72,92,78 = 825/10 = 82.5
         ColumnStatistics scoreStats = response.columnStatistics().stream() // Find score column stats
@@ -160,7 +160,7 @@ class StatisticalProfilingTest {
                 .contentType(TEXT_PLAIN) // Set content type
                 .content(csvData)); // Set request body
 
-        DataAnalysisResponse response = objectMapper.readValue(responseBody, DataAnalysisResponse.class); // Parse response
+        DataAnalysisResponseDto response = objectMapper.readValue(responseBody, DataAnalysisResponseDto.class); // Parse response
 
         // Test score column: sorted values 70,72,75,78,80,85,88,90,92,95
         // Median of 10 values = average of 5th and 6th = (80+85)/2 = 82.5
@@ -189,7 +189,7 @@ class StatisticalProfilingTest {
                 .contentType(TEXT_PLAIN) // Set content type
                 .content(csvData)); // Set request body
 
-        DataAnalysisResponse response = objectMapper.readValue(responseBody, DataAnalysisResponse.class); // Parse response
+        DataAnalysisResponseDto response = objectMapper.readValue(responseBody, DataAnalysisResponseDto.class); // Parse response
 
         // Test score column standard deviation
         ColumnStatistics scoreStats = response.columnStatistics().stream() // Find score column stats
@@ -214,7 +214,7 @@ class StatisticalProfilingTest {
                 .contentType(TEXT_PLAIN) // Set content type
                 .content(csvData)); // Set request body
 
-        DataAnalysisResponse response = objectMapper.readValue(responseBody, DataAnalysisResponse.class); // Parse response
+        DataAnalysisResponseDto response = objectMapper.readValue(responseBody, DataAnalysisResponseDto.class); // Parse response
 
         ColumnStatistics scoreStats = response.columnStatistics().stream() // Find score column stats
                 .filter(s -> s.columnName().equals("score")) // Filter by name
@@ -244,7 +244,7 @@ class StatisticalProfilingTest {
                 .contentType(TEXT_PLAIN) // Set content type
                 .content(csvData)); // Set request body
 
-        DataAnalysisResponse response = objectMapper.readValue(responseBody, DataAnalysisResponse.class); // Parse response
+        DataAnalysisResponseDto response = objectMapper.readValue(responseBody, DataAnalysisResponseDto.class); // Parse response
 
         // driver column should not be numeric
         ColumnStatistics driverStats = response.columnStatistics().stream() // Find driver column stats
@@ -294,11 +294,11 @@ class StatisticalProfilingTest {
                 .contentType(TEXT_PLAIN) // Set content type
                 .content(csvData)); // Set request body
 
-        DataAnalysisResponse ingestResult = objectMapper.readValue(ingestResponse, DataAnalysisResponse.class); // Parse response
+        DataAnalysisResponseDto ingestResult = objectMapper.readValue(ingestResponse, DataAnalysisResponseDto.class); // Parse response
         Long id = ingestResult.id(); // Get analysis ID
 
         String getResponse = performAndLog(get("/api/analysis/{id}", id)); // GET by ID
-        DataAnalysisResponse getResult = objectMapper.readValue(getResponse, DataAnalysisResponse.class); // Parse response
+        DataAnalysisResponseDto getResult = objectMapper.readValue(getResponse, DataAnalysisResponseDto.class); // Parse response
 
         // Verify statistics are returned on GET request
         ColumnStatistics scoreStats = getResult.columnStatistics().stream() // Find score column stats
@@ -321,7 +321,7 @@ class StatisticalProfilingTest {
                 .contentType(TEXT_PLAIN) // Set content type
                 .content(csvData)); // Set request body
 
-        DataAnalysisResponse response = objectMapper.readValue(responseBody, DataAnalysisResponse.class); // Parse response
+        DataAnalysisResponseDto response = objectMapper.readValue(responseBody, DataAnalysisResponseDto.class); // Parse response
 
         // All columns should not be numeric (no data to analyze)
         for (ColumnStatistics stats : response.columnStatistics()) { // Iterate all columns
@@ -343,7 +343,7 @@ class StatisticalProfilingTest {
                 .contentType(TEXT_PLAIN) // Set content type
                 .content(csvData)); // Set request body
 
-        DataAnalysisResponse firstResult = objectMapper.readValue(firstResponse, DataAnalysisResponse.class); // Parse response
+        DataAnalysisResponseDto firstResult = objectMapper.readValue(firstResponse, DataAnalysisResponseDto.class); // Parse response
         assertThat(firstResult.alreadyExists()).isFalse(); // Should be new
 
         // Second request with same content - should return cached
@@ -351,7 +351,7 @@ class StatisticalProfilingTest {
                 .contentType(TEXT_PLAIN) // Set content type
                 .content(csvData)); // Set request body
 
-        DataAnalysisResponse secondResult = objectMapper.readValue(secondResponse, DataAnalysisResponse.class); // Parse response
+        DataAnalysisResponseDto secondResult = objectMapper.readValue(secondResponse, DataAnalysisResponseDto.class); // Parse response
         assertThat(secondResult.alreadyExists()).isTrue(); // Should be cached
 
         // Verify statistics are the same
@@ -378,7 +378,7 @@ class StatisticalProfilingTest {
                 .contentType(TEXT_PLAIN) // Set content type
                 .content(csvData)); // Set request body
 
-        DataAnalysisResponse response = objectMapper.readValue(responseBody, DataAnalysisResponse.class); // Parse response
+        DataAnalysisResponseDto response = objectMapper.readValue(responseBody, DataAnalysisResponseDto.class); // Parse response
 
         // driver column should not be numeric (contains names)
         ColumnStatistics driverStats = response.columnStatistics().stream() // Find driver column stats

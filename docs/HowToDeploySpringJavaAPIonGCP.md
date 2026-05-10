@@ -26,7 +26,7 @@ gcloud projects list
 
 Set project:
 ```bash
-gcloud config set project spring-data-analysis-api
+gcloud config set project analytics-engine
 ```
 
 Verify:
@@ -109,7 +109,7 @@ Use Cloud Build instead.
 
 From repo root:
 ```bash
-gcloud builds submit --tag europe-west2-docker.pkg.dev/spring-data-analysis-api/app-repo/app
+gcloud builds submit --tag europe-west2-docker.pkg.dev/analytics-engine/app-repo/app
 ```
 
 What this does:
@@ -123,7 +123,7 @@ What this does:
 
 Grant Cloud Build permission to push images:
 ```bash
-gcloud projects add-iam-policy-binding spring-data-analysis-api \
+gcloud projects add-iam-policy-binding analytics-engine \
   --member="serviceAccount:506639246506@cloudbuild.gserviceaccount.com" \
   --role="roles/artifactregistry.writer"
 ```
@@ -134,7 +134,7 @@ gcloud projects add-iam-policy-binding spring-data-analysis-api \
 
 ```bash
 gcloud run deploy spring-data-analysis \
-  --image europe-west2-docker.pkg.dev/spring-data-analysis-api/app-repo/app \
+  --image europe-west2-docker.pkg.dev/analytics-engine/app-repo/app \
   --region europe-west2 \
   --allow-unauthenticated
 ```
@@ -176,8 +176,8 @@ git reset --hard
 git clean -fd
 git pull
 ./gradlew bootJar
-gcloud builds submit --tag europe-west2-docker.pkg.dev/spring-data-analysis-api/app-repo/app
+gcloud builds submit --tag europe-west2-docker.pkg.dev/analytics-engine/app-repo/app
 gcloud run deploy spring-data-analysis \
---image europe-west2-docker.pkg.dev/spring-data-analysis-api/app-repo/app \
+--image europe-west2-docker.pkg.dev/analytics-engine/app-repo/app \
 --region europe-west2 \
 --allow-unauthenticated

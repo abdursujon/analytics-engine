@@ -1,4 +1,4 @@
-package  com.sujon.spring_data_analysis_api.exception;
+package  com.sujon.analytics_engine.exception;
 
 /**
  * Thrown when a requested resource does not exist.

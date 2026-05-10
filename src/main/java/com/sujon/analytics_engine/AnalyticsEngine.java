@@ -1,15 +1,11 @@
-package com.sujon.spring_data_analysis_api;
+package com.sujon.analytics_engine;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-/**
- * Application entry point
- */
 @SpringBootApplication
-public class DataAnalysisApplication {
-
+public class AnalyticsEngine {
     public static void main(String[] args) {
-        SpringApplication.run(DataAnalysisApplication.class, args);
+        SpringApplication.run(AnalyticsEngine.class, args);
     }
 }

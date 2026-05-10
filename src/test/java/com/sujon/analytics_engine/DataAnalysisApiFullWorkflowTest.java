@@ -1,9 +1,9 @@
-package com.sujon.spring_data_analysis_api;
+package com.sujon.analytics_engine;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sujon.spring_data_analysis_api.controller.response.DataAnalysisResponse;
-import com.sujon.spring_data_analysis_api.repository.DataAnalysisRepository;
-import com.sujon.spring_data_analysis_api.repository.entity.DataAnalysisEntity;
+import com.sujon.analytics_engine.dto.DataAnalysisResponseDto;
+import com.sujon.analytics_engine.repository.DataAnalysisRepository;
+import com.sujon.analytics_engine.repository.entity.DataAnalysisEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +66,7 @@ class DataAnalysisApiFullWorkflowTest {
                 .contentType(TEXT_PLAIN)
                 .content(csvData));
 
-        DataAnalysisResponse response = objectMapper.readValue(responseBody, DataAnalysisResponse.class);
+       DataAnalysisResponseDto response = objectMapper.readValue(responseBody,DataAnalysisResponseDto.class);
         System.out.println("Parsed response: " + response);
 
         assertThat(response.columnStatistics()).hasSize(3);
@@ -86,7 +86,7 @@ class DataAnalysisApiFullWorkflowTest {
                 .contentType(TEXT_PLAIN)
                 .content(csvData));
 
-        DataAnalysisResponse response = objectMapper.readValue(responseBody, DataAnalysisResponse.class);
+       DataAnalysisResponseDto response = objectMapper.readValue(responseBody,DataAnalysisResponseDto.class);
         System.out.println("Parsed response: " + response);
 
         assertThat(response.columnStatistics()).hasSize(6);
@@ -106,7 +106,7 @@ class DataAnalysisApiFullWorkflowTest {
                 .contentType(TEXT_PLAIN)
                 .content(csvData));
 
-        DataAnalysisResponse response = objectMapper.readValue(responseBody, DataAnalysisResponse.class);
+       DataAnalysisResponseDto response = objectMapper.readValue(responseBody,DataAnalysisResponseDto.class);
         System.out.println("Parsed response: " + response);
 
         assertThat(response.columnStatistics()).hasSize(4);
@@ -127,7 +127,7 @@ class DataAnalysisApiFullWorkflowTest {
                 .contentType(TEXT_PLAIN)
                 .content(csvData));
 
-        DataAnalysisResponse response = objectMapper.readValue(responseBody, DataAnalysisResponse.class);
+       DataAnalysisResponseDto response = objectMapper.readValue(responseBody,DataAnalysisResponseDto.class);
         System.out.println("Parsed response: " + response);
 
         assertThat(response.columnStatistics()).hasSize(3);
@@ -171,7 +171,7 @@ class DataAnalysisApiFullWorkflowTest {
         Long analysisId = entities.get(0).getId();
 
         String responseBody = performAndLog(get("/api/analysis/{id}", analysisId));
-        DataAnalysisResponse response = objectMapper.readValue(responseBody, DataAnalysisResponse.class);
+       DataAnalysisResponseDto response = objectMapper.readValue(responseBody,DataAnalysisResponseDto.class);
         System.out.println("Parsed response: " + response);
 
         assertThat(response.numberOfRows()).isEqualTo(3);
@@ -206,11 +206,11 @@ class DataAnalysisApiFullWorkflowTest {
 
         Long id1 = entities.get(0).getId();
         String getResponse1 = performAndLog(get("/api/analysis/{id}", id1));
-        DataAnalysisResponse response1 = objectMapper.readValue(getResponse1, DataAnalysisResponse.class);
+       DataAnalysisResponseDto response1 = objectMapper.readValue(getResponse1,DataAnalysisResponseDto.class);
 
         Long id2 = entities.get(1).getId();
         String getResponse2 = performAndLog(get("/api/analysis/{id}", id2));
-        DataAnalysisResponse response2 = objectMapper.readValue(getResponse2, DataAnalysisResponse.class);
+       DataAnalysisResponseDto response2 = objectMapper.readValue(getResponse2,DataAnalysisResponseDto.class);
 
         assertThat(response1.numberOfRows()).isEqualTo(3);
         assertThat(response2.numberOfRows()).isEqualTo(4);
@@ -314,7 +314,7 @@ class DataAnalysisApiFullWorkflowTest {
                 .contentType(TEXT_PLAIN)
                 .content(csvData));
 
-        DataAnalysisResponse response = objectMapper.readValue(ingestResponse, DataAnalysisResponse.class);
+       DataAnalysisResponseDto response = objectMapper.readValue(ingestResponse,DataAnalysisResponseDto.class);
         Long id = response.id();
 
         byte[] downloadedBytes = performAndLog(get("/api/analysis/{id}/download.json", id)).getBytes(UTF_8);
