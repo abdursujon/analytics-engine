@@ -13,16 +13,20 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.time.OffsetDateTime;
 import java.util.List;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 public class DataAnalysisControllerTest {
+
+    // MockMvc simulates http requests without starting a real server
+    private MockMvc mockMvc;
+    private DataAnalysisResponseDto sampleResponse;
+    private String csvData;
+    private long csvDataLength;
 
     // @Mock a class object to inject that object into target mocks
     @Mock
@@ -32,19 +36,22 @@ public class DataAnalysisControllerTest {
     @InjectMocks
     private DataAnalysisController dataAnalysisController;
 
-    // MockMvc simulates http requests without starting a real server
-    private MockMvc mockMvc;
-    private DataAnalysisResponseDto sampleResponse;
 
     // Runs before each test
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception{
         mockMvc = MockMvcBuilders.standaloneSetup(dataAnalysisController).alwaysDo(print()).build();
+        csvData = new String(
+                getClass().getClassLoader().getResourceAsStream("test-data/large.csv").readAllBytes()
+        );
+        Long id = 1L;
+        csvDataLength = csvData.length();
+
         sampleResponse = new DataAnalysisResponseDto(
-                1L,
-                100,
-                8,
-                150L,
+                id,
+                11,
+                6,
+                csvDataLength,
                 List.of(new ColumnStatistics(
                         "name",
                         0,
@@ -64,20 +71,38 @@ public class DataAnalysisControllerTest {
 
     @Test
     void ingestAndAnalyseCsv_shouldReturnResponse_whenValidCsvProvided() throws Exception {
-        String csvData = "name,age,profession,hobby,reads,smokes,swims,drives\n" +
-                "Sujon,22,Engineer,cricket,true,false,true,false\n" +
-                "Ryan,27,Teacher,hiking,true,false,false,true,false";
-        long csvDataLength = csvData.length();
-
         when(dataAnalysisService.analyseCsvData(csvData)).thenReturn(sampleResponse);
 
-        mockMvc.perform(post("/api/analysis/ingestCsv").contentType("text/plain").content(csvData))
+        mockMvc.perform(post("/analytics-engine/ingestCsv").contentType("text/plain").content(csvData))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.numberOfRows").value(100))
-                .andExpect(jsonPath("$.numberOfColumns").value(8))
+                .andExpect(jsonPath("$.numberOfRows").value(11))
+                .andExpect(jsonPath("$.numberOfColumns").value(6))
                 .andExpect(jsonPath("$.totalCharacters").value(csvDataLength));
 
         verify(dataAnalysisService, times(1)).analyseCsvData(csvData);
+    }
+
+    @Test
+    void ingestAndAnalyseCsv_shouldReturnResponseById_whenValidCsvProvided() throws Exception{
+        Long id = 1L;
+        when(dataAnalysisService.getAnalysisById(id)).thenReturn(sampleResponse);
+        mockMvc.perform(get("/analytics-engine/{id}", id))
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.numberOfRows").value(11))
+                .andExpect(jsonPath("$.numberOfColumns").value(6))
+                .andExpect(jsonPath("$.totalCharacters").value(csvDataLength));
+        verify(dataAnalysisService, times(1)).getAnalysisById(id);
+    }
+
+    @Test
+    void deleteAnalysisById() throws Exception{
+        Long id = 1L;
+        doNothing().when(dataAnalysisService).deleteAnalysisById(id);
+
+        mockMvc.perform(delete("/analytics-engine/{id}", id))
+                .andExpect(status().isNoContent());
+
+        verify(dataAnalysisService, times(1)).deleteAnalysisById(id);
     }
 }

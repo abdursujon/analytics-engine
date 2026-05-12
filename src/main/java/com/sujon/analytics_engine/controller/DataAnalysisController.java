@@ -13,11 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
-/**
- * REST endpoints for CSV data analysis.
- */
+
 @RestController   
-@RequestMapping("/api/analysis")
+@RequestMapping("/analytics-engine")
 @CrossOrigin(
     origins = "*",
     allowedHeaders = "*",

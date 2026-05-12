@@ -5,7 +5,7 @@ All tests are written using **Spring Boot Test**, **MockMvc**, **JUnit 5**, and 
 
 ### Scope
 The tests validate CSV parsing, data profiling, persistence, and error handling for the
-`POST /api/analysis/ingestCsv` endpoint.
+`POST /analytics-engine/ingestCsv` endpoint.
 
 ---
 ## Getting Started
@@ -113,6 +113,6 @@ This suite provides strong confidence that the CSV ingestion layer behaves corre
 under real-world data engineering scenarios.
 
 ## Test locally 
-curl -X POST http://localhost:8080/api/analysis/ingestCsv \
+curl -X POST http://localhost:8080/analytics-engine/ingestCsv \
 -H "Content-Type: text/csv" \
 --data-binary @large.csv

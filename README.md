@@ -36,16 +36,16 @@ This is a data analysis service built with:
 (must be in the file directory or provide full path)
 - **Linux**
 ```bash
-curl -X POST -H "Content-Type: text/csv" --data-binary @test.csv https://spring-data-analysis-506639246506.europe-west2.run.app/api/analysis/ingestCsv | jq
+curl -X POST -H "Content-Type: text/csv" --data-binary @test.csv https://spring-data-analysis-506639246506.europe-west2.run.app/analytics-engine/ingestCsv | jq
 ```
 - **Windows**
 ```bash
-curl -X POST -H "Content-Type: text/csv" --data-binary "@large.csv" https://spring-data-analysis-506639246506.europe-west2.run.app/api/analysis/ingestCsv | ConvertFrom-Json
+curl -X POST -H "Content-Type: text/csv" --data-binary "@large.csv" https://spring-data-analysis-506639246506.europe-west2.run.app/analytics-engine/ingestCsv | ConvertFrom-Json
 ```
 
 - **Mac**
 ```bash
-curl -X POST -H "Content-Type: text/csv" --data-binary @large.csv https://spring-data-analysis-506639246506.europe-west2.run.app/api/analysis/ingestCsv | jq
+curl -X POST -H "Content-Type: text/csv" --data-binary @large.csv https://spring-data-analysis-506639246506.europe-west2.run.app/analytics-engine/ingestCsv | jq
 ```
 ---
 
@@ -102,9 +102,9 @@ This provides an interactive interface to test API endpoints without needing add
 ## API Endpoints
 
 ### Data Analysis
-- `POST /api/analysis/ingestCsv` - Ingest and analyze CSV data
-- `GET /api/analysis/{id}` - Retrieve a previously analyzed CSV by ID 
-- `DELETE /api/analysis/{id}` - Delete an analysis by ID
+- `POST /analytics-engine/ingestCsv` - Ingest and analyze CSV data
+- `GET /analytics-engine/{id}` - Retrieve a previously analyzed CSV by ID 
+- `DELETE /analytics-engine/{id}` - Delete an analysis by ID
 
 ---
 ## Example test case from Linux terminal 
@@ -120,13 +120,13 @@ This provides an interactive interface to test API endpoints without needing add
 curl -X POST \
   -H "Content-Type: text/csv" \
   --data-binary @large.csv \
-  http://localhost:8080/api/analysis/ingestCsv | jq
+  http://localhost:8080/analytics-engine/ingestCsv | jq
 ```
 
 - Download the json responose analysis ( you should see the id number when u get the analysis through endpoints call)
 ```bash
 curl -o analysis.json \
- http://localhost:8080/api/analysis/1/download.json | jq
+ http://localhost:8080/analytics-engine/1/download.json | jq
 ```
 ---
 ## You can view the h2 console and query different commands by following below procedure

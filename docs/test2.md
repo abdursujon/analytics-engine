@@ -20,13 +20,13 @@ Extend the analysis to include:
 - Inferred data type for each column (e.g., STRING, INTEGER, DECIMAL, BOOLEAN)
 
 ### 2. GET Endpoint
-Implement `GET /api/analysis/{id}` to:
+Implement `GET /analytics-engine/{id}` to:
 - Retrieve a previously analyzed CSV by its ID
 - Return the full analysis results
 - Handle cases where the ID doesn't exist
 
 ### 3. DELETE Endpoint
-Implement `DELETE /api/analysis/{id}` to:
+Implement `DELETE /analytics-engine/{id}` to:
 - Remove an analysis record by its ID
 - Return appropriate status codes
 - Handle cases where the ID doesn't exist

@@ -65,7 +65,7 @@ class DataAnalysisControllerTest {
         String csvData = "name,age\nJohn,30\nJane,25";
         when(dataAnalysisService.analyzeCsvData(csvData)).thenReturn(sampleResponse);
 
-        mockMvc.perform(post("/api/analysis/ingestCsv")
+        mockMvc.perform(post("/analytics-engine/ingestCsv")
                         .contentType("text/plain")
                         .content(csvData))
                 .andExpect(status().isOk())
@@ -80,7 +80,7 @@ class DataAnalysisControllerTest {
     void getAnalysisById_shouldReturnResponse_whenIdExists() throws Exception {
         when(dataAnalysisService.getAnalysisById(1L)).thenReturn(sampleResponse);
 
-        mockMvc.perform(get("/api/analysis/1"))
+        mockMvc.perform(get("/analytics-engine/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L));
 
@@ -91,7 +91,7 @@ class DataAnalysisControllerTest {
     void getAnalysisById_shouldReturn404_whenIdDoesNotExist() throws Exception {
         when(dataAnalysisService.getAnalysisById(99L)).thenThrow(new NotFoundException("Not found"));
 
-        mockMvc.perform(get("/api/analysis/99"))
+        mockMvc.perform(get("/analytics-engine/99"))
                 .andExpect(status().isNotFound());
 
         verify(dataAnalysisService, times(1)).getAnalysisById(99L);
@@ -101,7 +101,7 @@ class DataAnalysisControllerTest {
     void downloadJson_shouldReturnJsonFile_whenIdExists() throws Exception {
         when(dataAnalysisService.getAnalysisById(1L)).thenReturn(sampleResponse);
 
-        mockMvc.perform(get("/api/analysis/1/download.json"))
+        mockMvc.perform(get("/analytics-engine/1/download.json"))
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Disposition", "attachment; filename=\"analysis.json\""))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
@@ -113,7 +113,7 @@ class DataAnalysisControllerTest {
     void downloadJson_shouldReturn404_whenIdDoesNotExist() throws Exception {
         when(dataAnalysisService.getAnalysisById(99L)).thenThrow(new NotFoundException("Not found"));
 
-        mockMvc.perform(get("/api/analysis/99/download.json"))
+        mockMvc.perform(get("/analytics-engine/99/download.json"))
                 .andExpect(status().isNotFound());
     }
 
@@ -121,7 +121,7 @@ class DataAnalysisControllerTest {
     void deleteAnalysisById_shouldReturn204_whenIdExists() throws Exception {
         doNothing().when(dataAnalysisService).deleteAnalysisById(1L);
 
-        mockMvc.perform(delete("/api/analysis/1"))
+        mockMvc.perform(delete("/analytics-engine/1"))
                 .andExpect(status().isNoContent());
 
         verify(dataAnalysisService, times(1)).deleteAnalysisById(1L);
@@ -131,7 +131,7 @@ class DataAnalysisControllerTest {
     void deleteAnalysisById_shouldReturn404_whenIdDoesNotExist() throws Exception {
         doThrow(new NotFoundException("Not found")).when(dataAnalysisService).deleteAnalysisById(99L);
 
-        mockMvc.perform(delete("/api/analysis/99"))
+        mockMvc.perform(delete("/analytics-engine/99"))
                 .andExpect(status().isNotFound());
 
         verify(dataAnalysisService, times(1)).deleteAnalysisById(99L);
