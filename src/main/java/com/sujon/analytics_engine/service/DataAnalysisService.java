@@ -10,7 +10,6 @@ import com.sujon.analytics_engine.repository.entity.ColumnStatisticsEntity;
 import com.sujon.analytics_engine.repository.entity.DataAnalysisEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.ArrayList;
@@ -31,7 +30,6 @@ public class DataAnalysisService {
 
     private static final long MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024;
     private static final long MAX_CELL_COUNT = 1_000_000;
-
     private final DataAnalysisRepository dataAnalysisRepository;
     private final ColumnStatisticsRepository columnStatisticsRepository;
 
@@ -219,10 +217,6 @@ public class DataAnalysisService {
     private DataAnalysisResponseDto createNewAnalysis(String data, String contentHash) {
 
         String[] lines = data.split("\\R", -1);
-
-        if (data.contains("Sonny Hayes")) {
-            throw new BadRequestException("Invalid CSV");
-        }
 
         if (lines.length == 0 || lines[0].isBlank()) {
             throw new BadRequestException("Invalid CSV");

@@ -27,52 +27,52 @@ public class ColumnStatisticsEntity {
     @GeneratedValue(strategy = IDENTITY) // Auto-increment ID generation
     private Long id;
 
-    @Column(name = "column_name", nullable = false) // CSV column header name
+    @Column(name = "column_name", nullable = false)
     private String columnName;
 
-    @Column(name = "null_count") // Count of null/empty values
+    @Column(name = "null_count")
     private int nullCount;
 
-    @Column(name = "unique_count") // Count of distinct non-null values
+    @Column(name = "unique_count")
     private int uniqueCount;
 
-    @Column(name = "is_numeric") // Flag indicating if column is numeric
+    @Column(name = "is_numeric")
     private boolean isNumeric;
 
-    @Column(name = "min_value") // Minimum value for numeric columns
+    @Column(name = "min_value")
     private Double minValue;
 
-    @Column(name = "max_value") // Maximum value for numeric columns
+    @Column(name = "max_value")
     private Double maxValue;
 
-    @Column(name = "mean_value") // Arithmetic mean for numeric columns
+    @Column(name = "mean_value")
     private Double meanValue;
 
-    @Column(name = "median_value") // Median (50th percentile) for numeric columns
+    @Column(name = "median_value")
     private Double medianValue;
 
-    @Column(name = "standard_deviation") // Standard deviation for numeric columns
+    @Column(name = "standard_deviation")
     private Double standardDeviation;
 
-    @Column(name = "percentile_25") // 25th percentile (Q1) for numeric columns
+    @Column(name = "percentile_25")
     private Double percentile25;
 
-    @Column(name = "percentile_50") // 50th percentile (Q2/median) for numeric columns
+    @Column(name = "percentile_50")
     private Double percentile50;
 
-    @Column(name = "percentile_75") // 75th percentile (Q3) for numeric columns
+    @Column(name = "percentile_75")
     private Double percentile75;
 
-    @Column(name = "percentile_90") // 90th percentile for numeric columns
+    @Column(name = "percentile_90")
     private Double percentile90;
 
-    @Column(name = "percentile_95") // 95th percentile for numeric columns
+    @Column(name = "percentile_95")
     private Double percentile95;
 
-    @Column(name = "percentile_99") // 99th percentile for numeric columns
+    @Column(name = "percentile_99")
     private Double percentile99;
 
-    @ManyToOne(fetch = LAZY) // Lazy fetch to avoid loading parent unnecessarily
-    @JoinColumn(name = "data_analysis_id") // Foreign key to parent analysis
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "data_analysis_id")
     private DataAnalysisEntity dataAnalysis;
 }
