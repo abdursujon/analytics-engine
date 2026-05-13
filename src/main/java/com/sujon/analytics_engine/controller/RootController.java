@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class RootController {
-    @GetMapping(value = "/", produces = "text/html")
+    @GetMapping(value = "/analytics-engine", produces = "text/html")
     public String home() {
         return """
                 <!DOCTYPE html>
                 <html>
                   <head>
-                    <title>Data Analytics Engine</title>
+                    <title>Analytics Engine</title>
                     <style>
                       body {
                         margin: 0;
@@ -50,7 +50,7 @@ public class RootController {
                   </head>
                   <body>
                     <div class="card">
-                      <h1>Spring Data Analysis API</h1>
+                      <h1>Analytics Engine</h1>
                       <p class="status">Status: Running</p>
                       <p>Author: Abdur Sujon</p>
                       <p>© 2025</p>
