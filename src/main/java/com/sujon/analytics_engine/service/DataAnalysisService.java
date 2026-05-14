@@ -64,11 +64,7 @@ public class DataAnalysisService {
                 .orElse("");
     }
 
-    /**
-     * Attempts to parse a string value as a Double.
-     * @param value the string value to parse
-     * @return the parsed Double value, or null if the value is blank or not a valid number
-     */
+
     private Double tryParseDouble(String value) {
         if (value == null || value.isBlank()) {
             return null;
@@ -80,11 +76,7 @@ public class DataAnalysisService {
         }
     }
 
-    /**
-     * Calculates the arithmetic mean (average) of a list of numeric values.
-     * @param values list of Double values to calculate the mean from
-     * @return the arithmetic mean, or null if the list is empty
-     */
+
     private Double calculateMean(List<Double> values) {
         if (values.isEmpty()) {
             return null;
@@ -96,11 +88,7 @@ public class DataAnalysisService {
         return sum / values.size();
     }
 
-    /**
-     * Calculates the median (50th percentile) of a sorted list of values.
-     * @param sortedValues a pre-sorted list of Double values (ascending order)
-     * @return the median value, or null if the list is empty
-     */
+
     private Double calculateMedian(List<Double> sortedValues) {
         if (sortedValues.isEmpty()) {
             return null;
@@ -113,12 +101,7 @@ public class DataAnalysisService {
         }
     }
 
-    /**
-     * Calculates the population standard deviation of a list of values.
-     * @param values list of Double values
-     * @param mean the pre-calculated arithmetic mean of the values
-     * @return the population standard deviation, or null if the list is empty or mean is null
-     */
+
     private Double calculateStandardDeviation(List<Double> values, Double mean) {
         if (values.isEmpty() || mean == null) {
             return null;
@@ -132,12 +115,7 @@ public class DataAnalysisService {
         return Math.sqrt(variance);
     }
 
-    /**
-     * Calculates a specific percentile from a sorted list of values using linear interpolation.
-     * @param sortedValues a pre-sorted list of Double values (ascending order)
-     * @param percentile the percentile to calculate (0-100)
-     * @return the interpolated percentile value, or null if the list is empty
-     */
+
     private Double calculatePercentile(List<Double> sortedValues, double percentile) {
         if (sortedValues.isEmpty()) {
             return null;
@@ -155,12 +133,7 @@ public class DataAnalysisService {
         return sortedValues.get(lower) + fraction * (sortedValues.get(upper) - sortedValues.get(lower));
     }
 
-    /**
-     * Analyzes CSV data and returns statistical analysis results.
-     * @param data the raw CSV content as a string
-     * @return DataAnalysisResponse containing analysis results and metadata
-     * @throws BadRequestException if the CSV data is null, blank, or invalid
-     */
+
     public DataAnalysisResponseDto analyseCsvData(String data) {
 
         if (data == null || data.isBlank()) {
@@ -207,13 +180,7 @@ public class DataAnalysisService {
                 .orElseGet(() -> createNewAnalysis(data, contentHash));
     }
 
-    /**
-     * Performs full CSV parsing, statistical analysis, and database persistence.
-     * @param data the raw CSV content
-     * @param contentHash the pre-computed SHA-256 hash of the normalized content
-     * @return DataAnalysisResponse containing the newly created analysis results
-     * @throws BadRequestException if the CSV is malformed or contains blocked content
-     */
+
     private DataAnalysisResponseDto createNewAnalysis(String data, String contentHash) {
 
         String[] lines = data.split("\\R", -1);
@@ -376,12 +343,7 @@ public class DataAnalysisService {
         );
     }
 
-    /**
-     * Retrieves a previously stored analysis by its unique identifier.
-     * @param id the unique identifier of the analysis to retrieve
-     * @return DataAnalysisResponse containing the analysis results
-     * @throws NotFoundException if no analysis exists with the given ID
-     */
+
     public DataAnalysisResponseDto getAnalysisById(Long id) {
 
         DataAnalysisEntity entity = dataAnalysisRepository.findById(id)
@@ -418,17 +380,12 @@ public class DataAnalysisService {
         );
     }
 
-    /**
-     * Deletes an analysis record and its associated column statistics from the database.
-     * @param id the unique identifier of the analysis to delete
-     * @throws NotFoundException if no analysis exists with the given ID
-     */
-    public void deleteAnalysisById(Long id) {
 
+    public void deleteAnalysisById(Long id) {
         if (!dataAnalysisRepository.existsById(id)) {
             throw new NotFoundException("Analysis not found");
         }
-
         dataAnalysisRepository.deleteById(id);
     }
+
 }

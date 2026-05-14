@@ -23,8 +23,10 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Builder
 public class ColumnStatisticsEntity {
 
-    @Id // Primary key for the entity
-    @GeneratedValue(strategy = IDENTITY) // Auto-increment ID generation
+    // Primary key for the entity
+    @Id
+    // Auto-increment ID generation
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     @Column(name = "column_name", nullable = false)
