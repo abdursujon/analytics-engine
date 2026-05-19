@@ -1,154 +1,180 @@
 # Analytics Engine
 
-<p>Welcome to the Spring Analytics Engine API. 
-This project is a Spring Boot–based data analysis
-REST API that ingests CSV files and automatically profiles their structure and content. 
-The service extracts metadata such as column types, null counts, and statistical summaries,
-then persists analysis results for later retrieval.
-The system is designed to support real-world data engineering workflows, 
-including dataset exploration, data quality assessment, and ETL validation before 
-data is loaded into analytics platforms. It exposes clean REST endpoints for uploading data, 
-retrieving analysis results, and managing stored analyses.
-The focus is on production-style backend design using modern Java, clear API 
-contracts, test-driven development, and extensibility for future features such 
-as additional metrics, storage backends, or file formats.</p>
+A Spring Boot REST API that profiles CSV data. Upload a CSV and the service infers column types, counts nulls and unique values, computes summary statistics (min, max, mean, median, standard deviation, and the
+25/50/75/90/95/99 percentiles), and persists the results so they can be retrieved or downloaded later. Repeated uploads of the same content are detected via SHA-256 hashing and short-circuit to the cached analysis.
 
----
-## Overview
-This is a data analysis service built with:
-- **Java 17**
-- **Spring Boot 3** (Web, JPA, Actuator)
-- **Gradle** for dependency management
-- **H2 Database** for lightweight in-memory persistence
-- **Lombok** for reducing boilerplate code
-- **JUnit 5** for testing
-- Google Cloud Platform for deployment
-- The service provides REST API endpoints for ingesting and analyzing data, with results persisted to an H2 database.
+The project is intentionally scoped as a data-profiling component — the kind of building block that sits inside a larger data pipeline, rather than a pipeline itself. Focus is on clean Spring layering, a clear REST contract,
+and a tested codebase.
 
----
+  ---
 
-## How to use 
-- The API is running at: https://spring-data-analysis-506639246506.europe-west2.run.app/
-- [Upload file to Transform My Raw Data](https://abdursujon.github.io/transform-my-raw-data/)
-- Or you can ingest file directly from your terminal as below
+## Try it
 
-#### Example for Linux, windows, and mac
-(must be in the file directory or provide full path)
-- **Linux**
-```bash
-curl -X POST -H "Content-Type: text/csv" --data-binary @test.csv https://spring-data-analysis-506639246506.europe-west2.run.app/analytics-engine/ingestCsv | jq
-```
-- **Windows**
-```bash
-curl -X POST -H "Content-Type: text/csv" --data-binary "@large.csv" https://spring-data-analysis-506639246506.europe-west2.run.app/analytics-engine/ingestCsv | ConvertFrom-Json
-```
+- **Live API:** https://spring-data-analysis-506639246506.europe-west2.run.app/
+- **Web UI:** https://abdursujon.github.io/transform-my-raw-data/
 
-- **Mac**
-```bash
-curl -X POST -H "Content-Type: text/csv" --data-binary @large.csv https://spring-data-analysis-506639246506.europe-west2.run.app/analytics-engine/ingestCsv | jq
-```
----
+### How to use the service from terminal 
 
-## Real-World Use Cases
+**Linux / macOS**
+  ```bash
+  curl -X POST \
+    -H "Content-Type: text/csv" \
+    --data-binary @your-file.csv \
+    https://spring-data-analysis-506639246506.europe-west2.run.app/analytics-engine/ingestCsv | jq
+  ```
 
-This type of service is commonly used in data engineering and analytics platforms where users need to:
-- **Explore unknown datasets** - Quickly understand the structure, data types, and basic statistics of CSV files without manual inspection
-- **Data quality assessment** - Automatically detect data types, identify null values, and calculate statistical summaries to assess data completeness
-- **ETL pipeline validation** - Verify data format and content before loading into data warehouses or lakes
-- **Self-service analytics** - Enable business users to upload and analyze their own datasets through a simple API
-- **Data profiling** - Generate metadata and summary statistics for data catalogs and governance tools
+**Windows (PowerShell)**
+  ```powershell
+  curl -X POST -H "Content-Type: text/csv" --data-binary "@your-file.csv" `
+    https://spring-data-analysis-506639246506.europe-west2.run.app/analytics-engine/ingestCsv | ConvertFrom-Json
+  ```
 
-In production environments, similar services often integrate with cloud storage (S3, Azure Blob), handle larger file formats (Parquet, Avro), and scale horizontally to process multiple files concurrently.
+The response includes the assigned `id`. You can fetch or download the analysis later:
 
----
-## If you want to contribute to the project this is how you can get started
-- First clone the repo: git clone https://github.com/abdursujon/analytics-engine.git
+  ```bash
+  # Retrieve as JSON
+  curl https://spring-data-analysis-506639246506.europe-west2.run.app/analytics-engine/{id} | jq
 
-### Build the Project
-```bash
-./gradlew build
-```
+  # Download as a JSON file
+  curl -o analysis.json \
+    https://spring-data-analysis-506639246506.europe-west2.run.app/analytics-engine/{id}/download.json
+  ```
 
-### Run the Application
-```bash
-./gradlew bootRun
-```
-The service will start on `http://localhost:8080`
+  ---
 
-## Rerun spring when need to
-```bash
-./gradlew clean bootRun
-```
+## API Endpoints 
 
-## Stop local host before rerun if you get error on clean bootRun
-- Get-NetTCPConnection -LocalPort 8080 | Select-Object -ExpandProperty OwningProcess
+| Method | Path                                      | Description                              |
+  |--------|-------------------------------------------|------------------------------------------|
+| POST   | `/analytics-engine/ingestCsv`             | Upload CSV; returns the analysis         |
+| GET    | `/analytics-engine/{id}`                  | Retrieve a previously stored analysis    |
+| GET    | `/analytics-engine/{id}/download.json`    | Download the analysis as a JSON file     |
+| DELETE | `/analytics-engine/{id}`                  | Delete an analysis                       |
 
-### Run Tests
-```bash
-./gradlew test
-```
+### Example response
 
-The test result will be printed on the terminal.
-Alternatively, the result can be viewed on the browser: <your-project-path>/build/reports/tests/test/index.html
+  ```json
+  {
+    "id": 1,
+    "numberOfRows": 1000,
+    "numberOfColumns": 3,
+    "totalCharacters": 27543,
+    "columnStatistics": [
+      {
+        "columnName": "age",
+        "nullCount": 12,
+        "uniqueCount": 67,
+        "isNumeric": true,
+        "min": 18.0,
+        "max": 91.0,
+        "mean": 42.3,
+        "median": 41.0,
+        "standardDeviation": 14.2,
+        "percentiles": [29.0, 41.0, 55.0, 67.0, 73.0, 85.0]
+      }
+    ],
+    "createdAt": "2026-01-15T10:30:00Z",
+    "alreadyExists": false
+  }
+  ```
 
----
-### Test the API Manually
+- `percentiles` is ordered as `[p25, p50, p75, p90, p95, p99]`, and is `null` for non-numeric columns.
+- `alreadyExists` is `true` when the upload was deduplicated by content hash.
 
-Once the application is running, you can interact with the API using Swagger UI:
-**Open in your browser:** `http://localhost:8080/swagger-ui/index.html`
-This provides an interactive interface to test API endpoints without needing additional tools like Postman or curl.
+  ---
 
+## Tech stack
 
-## API Endpoints
+- **Java 17**, **Spring Boot 3** (Web, JPA, Actuator)
+- **Gradle** for builds
+- **H2** as an in-memory database
+- **Lombok** to cut boilerplate
+- **JUnit 5** for unit and integration tests
+- **Google Cloud Run** for deployment, via GitHub Actions
 
-### Data Analysis
-- `POST /analytics-engine/ingestCsv` - Ingest and analyze CSV data
-- `GET /analytics-engine/{id}` - Retrieve a previously analyzed CSV by ID 
-- `DELETE /analytics-engine/{id}` - Delete an analysis by ID
+  ---
 
----
-## Example test case from Linux terminal 
+## Run locally
 
-### For Developer Testing locally 
+  ```bash
+  git clone https://github.com/abdursujon/analytics-engine.git
+  cd analytics-engine
+  ./gradlew bootRun
+  ```
 
-**File import and analysis through terminal**
-- First cd into the resource directory or you can specify any directory where you have the resource to the Infile name.
-- Then run this command for txt file analysis (the txt file is totally up to you change the file type to try different items).
-- Allowed upload types are txt, csv (JSON, and Excel will be available soon). 
+- Service starts on `http://localhost:8080/analytics-engine`
+- Swagger UI is at `http://localhost:8080/swagger-ui/index.html`
+- OpenAPI JSON (raw spec) `http://localhost:8080/v3/api-docs`
+- H2 database web console `http://localhost:8080/h2-console`
+  (JDBC URL: jdbc:h2:mem:analysis-db, Username: sa, Password: (blank — leave the field empty)
+- Spring Actuator health check `http://localhost:8080/actuator/health`
 
+### Run tests
+
+  ```bash
+  ./gradlew test
+  ```
+
+### Upload File and Test Locally 
+**Linux / macOS**
 ```bash
 curl -X POST \
   -H "Content-Type: text/csv" \
-  --data-binary @large.csv \
+  --data-binary @your-file.csv \
   http://localhost:8080/analytics-engine/ingestCsv | jq
 ```
 
-- Download the json responose analysis ( you should see the id number when u get the analysis through endpoints call)
-```bash
-curl -o analysis.json \
- http://localhost:8080/analytics-engine/1/download.json | jq
+**Windows (PowerShell)**
+```powershell
+curl -X POST -H "Content-Type: text/csv" --data-binary "@your-file.csv" `
+      http://localhost:8080/analytics-engine/ingestCsv | ConvertFrom-Json
+An HTML report is generated at `build/reports/tests/test/index.html`.
 ```
----
-## You can view the h2 console and query different commands by following below procedure
-Note: This is not required, do this only if you are interested in knowing how h2 works under the hood.
+The response includes the assigned `id`. You can fetch or download the analysis later:
+```bash
+    # Retrieve as JSON
+    curl http://localhost:8080/analytics-engine/{id} | jq
 
-First Start the Spring Boot app.
+    # Download as a JSON file   
+    curl -o analysis.json \
+      http://localhost:8080/analytics-engine/{id}/download.json
 
-Then Open browser:
-http://localhost:8080/h2-console
+    # Delete an analysis 
+    curl -X DELETE http://localhost:8080/analytics-engine/{id}
+```
+### Build a runnable jar
 
-Login (default, you can change the properties if you like in application.yml:
-JDBC URL: jdbc:h2:mem:testdb
-Username: sa
-Password:
+```bash
+  ./gradlew clean bootJar
+  java -jar build/libs/analytics-engine.jar
+```
+### Bootrun issues and how to fix 
+### Invoke the wrapper jar directly to regenerate the wrapper scripts:
+```bash
+java -cp gradle/wrapper/gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain wrapper
+chmod +x gradlew
+./gradlew clean bootRun
+```
+### Free port 8080 if `bootRun` fails
 
-Click Connect.
-Run SQL for example:
-SHOW TABLES;
-SELECT * FROM your_table;
-You should see table as shown on the image:
-<img src="assets/img.png" width="800" height="800">
+  ```bash
+  # Linux / macOS
+  lsof -ti:8080 | xargs kill -9
+  ```
+  ```powershell
+  # Windows (PowerShell)
+  Get-NetTCPConnection -LocalPort 8080 | Select-Object -ExpandProperty OwningProcess | ForEach-Object { Stop-Process -Id $_ -Force }
+  ```
 
-## How to create a Jar 
-./gradlew clean bootJar
-java -jar build/libs/analytics-engine.jar
+  ---
+
+## Limitations
+
+This service is intentionally a small, focused component, not a production data platform.
+- **In-memory storage.** H2 is configured in-memory, so analyses are lost on restart.
+- **5 MB upload cap** and a 1,000,000-cell limit per file, enforced at the service layer.
+- **CSV only.** JSON and Excel are not supported.
+- **No authentication.** CORS is open (`*`) — appropriate for a public demo, not for production.
+- **Single-instance, synchronous.** Everything runs in the request thread; large files block the response.
+
+  ---

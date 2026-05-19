@@ -39,7 +39,7 @@ public class DataAnalysisService {
      * @return a 64-character hexadecimal SHA-256 hash representing the input content
      * @throws RuntimeException if the SHA-256 algorithm is not available
      */
-    private String sha256(String input) {
+    String sha256(String input) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] hash = md.digest(input.getBytes(java.nio.charset.StandardCharsets.UTF_8));
@@ -54,7 +54,7 @@ public class DataAnalysisService {
      * @param data the raw CSV content
      * @return normalized CSV content suitable for hashing
      */
-    private String normalizeForHash(String data) {
+    String normalizeForHash(String data) {
         return data
                 .replace("\r\n", "\n")
                 .lines()
@@ -65,7 +65,7 @@ public class DataAnalysisService {
     }
 
 
-    private Double tryParseDouble(String value) {
+   Double tryParseDouble(String value) {
         if (value == null || value.isBlank()) {
             return null;
         }
@@ -77,7 +77,7 @@ public class DataAnalysisService {
     }
 
 
-    private Double calculateMean(List<Double> values) {
+    Double calculateMean(List<Double> values) {
         if (values.isEmpty()) {
             return null;
         }
@@ -89,7 +89,7 @@ public class DataAnalysisService {
     }
 
 
-    private Double calculateMedian(List<Double> sortedValues) {
+     Double calculateMedian(List<Double> sortedValues) {
         if (sortedValues.isEmpty()) {
             return null;
         }
@@ -102,7 +102,7 @@ public class DataAnalysisService {
     }
 
 
-    private Double calculateStandardDeviation(List<Double> values, Double mean) {
+    Double calculateStandardDeviation(List<Double> values, Double mean) {
         if (values.isEmpty() || mean == null) {
             return null;
         }
@@ -116,7 +116,7 @@ public class DataAnalysisService {
     }
 
 
-    private Double calculatePercentile(List<Double> sortedValues, double percentile) {
+    Double calculatePercentile(List<Double> sortedValues, double percentile) {
         if (sortedValues.isEmpty()) {
             return null;
         }
@@ -181,7 +181,7 @@ public class DataAnalysisService {
     }
 
 
-    private DataAnalysisResponseDto createNewAnalysis(String data, String contentHash) {
+   DataAnalysisResponseDto createNewAnalysis(String data, String contentHash) {
 
         String[] lines = data.split("\\R", -1);
 

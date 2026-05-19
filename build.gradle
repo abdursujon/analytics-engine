@@ -53,3 +53,9 @@ bootJar {
     archiveFileName = "analytics-engine.jar"
 }
 
+test {
+    useJUnitPlatform()
+    testLogging {
+        showStandardStreams = true
+    }
+}
