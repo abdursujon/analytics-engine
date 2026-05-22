@@ -1,0 +1,4 @@
+{"id": 1,    "name": "a",  "score": 1.5}
+{"id": 2,    "name": null, "score": 2.5}
+{"id": null, "name": "b",  "score": null}
+{"id": null, "name": null, "score": null}

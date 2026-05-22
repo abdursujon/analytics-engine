@@ -1,5 +1,6 @@
 package  com.sujon.analytics_engine.repository.entity;
 
+import com.sujon.analytics_engine.model.DataFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.FetchType.EAGER;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -28,8 +30,12 @@ public class DataAnalysisEntity {
     private Long id;
 
     @Lob
-    @Column(name = "original_data", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "original_data", columnDefinition = "TEXT")
     private String originalData;
+
+    @Enumerated(STRING)
+    @Column(name= "format", nullable = false, length = 16)
+    private DataFormat format;
     
     // content_hash for checking duplicate call
     @Column(name = "content_hash", nullable = false, unique = true, length = 64)

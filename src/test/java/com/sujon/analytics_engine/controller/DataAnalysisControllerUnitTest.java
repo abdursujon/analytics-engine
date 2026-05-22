@@ -5,6 +5,7 @@ import com.sujon.analytics_engine.exception.GlobalExceptionHandler;
 import com.sujon.analytics_engine.exception.NotFoundException;
 
 import com.sujon.analytics_engine.model.ColumnStatistics;
+import com.sujon.analytics_engine.model.DataFormat;
 import com.sujon.analytics_engine.service.DataAnalysisService;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -60,7 +61,7 @@ public class DataAnalysisControllerUnitTest {
                 .alwaysDo(print())
                 .build();
         csvData = new String(
-                getClass().getClassLoader().getResourceAsStream("test-data/large.csv").readAllBytes()
+                getClass().getClassLoader().getResourceAsStream("test-data/csv/large.csv").readAllBytes()
         );
         Long id = 1L;
         csvDataLength = csvData.length();
@@ -83,7 +84,8 @@ public class DataAnalysisControllerUnitTest {
                         null
                 )),
                 OffsetDateTime.now(),
-                false
+                false,
+                DataFormat.CSV
         );
     }
 

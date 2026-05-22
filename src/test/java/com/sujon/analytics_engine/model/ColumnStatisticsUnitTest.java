@@ -15,7 +15,7 @@ public class ColumnStatisticsUnitTest {
     void shouldReturnExpectedColumnStatisticsDataResponse() throws Exception{
 
         csvData = new String(
-                getClass().getClassLoader().getResourceAsStream("test-data/large.csv").readAllBytes()
+                getClass().getClassLoader().getResourceAsStream("test-data/csv/large.csv").readAllBytes()
         );
 
         ColumnStatistics columnStatistics= new ColumnStatistics(

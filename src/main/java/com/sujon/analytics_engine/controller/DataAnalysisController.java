@@ -12,7 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
-
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
 
 @RestController   
 @RequestMapping("/analytics-engine")
@@ -27,6 +28,50 @@ public class DataAnalysisController {
     private final DataAnalysisService dataAnalysisService;
 
     @PostMapping(
+            value = "/ingestParquet",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = "application/json"
+    )
+    public DataAnalysisResponseDto ingestAndAnalyzeParquet(@RequestParam("file") MultipartFile file) {
+
+        if (file == null || file.isEmpty()) {
+            throw new BadRequestException("Parquet file is required");
+        }
+
+        String filename = file.getOriginalFilename();
+        if (filename != null && !filename.toLowerCase().endsWith(".parquet")) {
+            throw new BadRequestException("File must have .parquet extension");
+        }
+
+        try {
+            return dataAnalysisService.analyseParquetData(file.getBytes());
+        } catch (IOException e) {
+            throw new BadRequestException("Failed to read uploaded file");
+        }
+    }
+
+
+    @PostMapping(
+            value = "/ingestJson",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = "application/json"
+    )
+    public DataAnalysisResponseDto ingestAndAnalyzeJson(@RequestBody String body) {
+        return dataAnalysisService.analyseJsonData(body, false);
+    }
+
+
+    @PostMapping(
+            value = "/ingestNdjson",
+            consumes = "application/x-ndjson",
+            produces = "application/json"
+    )
+    public DataAnalysisResponseDto ingestAndAnalyzeNdjson(@RequestBody String body) {
+        return dataAnalysisService.analyseJsonData(body, true);
+    }
+
+
+    @PostMapping(
             value = "/ingestCsv",
             consumes = {"text/plain", "text/csv"},
             produces = "application/json"
@@ -39,6 +84,7 @@ public class DataAnalysisController {
     public DataAnalysisResponseDto getAnalysisById(@PathVariable Long id) {
         return dataAnalysisService.getAnalysisById(id);
     }
+
 
     // Allow download of json response
     @GetMapping("/{id}/download.json")
@@ -62,6 +108,7 @@ public class DataAnalysisController {
             throw new BadRequestException("Failed to generate JSON");
         }
     }
+
 
     @DeleteMapping("/{id}")
     @ResponseStatus(NO_CONTENT)

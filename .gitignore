@@ -94,3 +94,5 @@ gcloud-service-key.json
 [internal]
 transferring
 bin
+
+.venv/

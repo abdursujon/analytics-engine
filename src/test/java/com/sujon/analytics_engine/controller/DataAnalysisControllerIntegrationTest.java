@@ -29,7 +29,7 @@ public class DataAnalysisControllerIntegrationTest {
     @BeforeEach
     void setUp() throws Exception {
         validCsv = new String(
-                getClass().getClassLoader().getResourceAsStream("test-data/large.csv").readAllBytes()
+                getClass().getClassLoader().getResourceAsStream("test-data/csv/large.csv").readAllBytes()
         );
     }
 

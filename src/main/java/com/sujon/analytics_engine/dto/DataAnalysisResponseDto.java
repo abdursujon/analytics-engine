@@ -1,6 +1,7 @@
 package com.sujon.analytics_engine.dto;
 
 import com.sujon.analytics_engine.model.ColumnStatistics;
+import com.sujon.analytics_engine.model.DataFormat;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -15,6 +16,7 @@ public record DataAnalysisResponseDto(
         long totalCharacters,
         List<ColumnStatistics> columnStatistics,
         OffsetDateTime createdAt,
-        boolean alreadyExists
+        boolean alreadyExists,
+        DataFormat format
 ) {
 }

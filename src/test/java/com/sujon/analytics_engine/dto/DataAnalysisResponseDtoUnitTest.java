@@ -1,6 +1,7 @@
 package com.sujon.analytics_engine.dto;
 
 import com.sujon.analytics_engine.model.ColumnStatistics;
+import com.sujon.analytics_engine.model.DataFormat;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import java.time.OffsetDateTime;
@@ -17,7 +18,7 @@ public class DataAnalysisResponseDtoUnitTest {
     void shouldReturnExpectedSampleResponse() throws Exception{
 
         csvData = new String(
-                getClass().getClassLoader().getResourceAsStream("test-data/large.csv").readAllBytes()
+                getClass().getClassLoader().getResourceAsStream("test-data/csv/large.csv").readAllBytes()
         );
 
         String[] line = csvData.split("\\R");
@@ -43,7 +44,8 @@ public class DataAnalysisResponseDtoUnitTest {
                         null
                 )),
                 OffsetDateTime.now(),
-                false
+                false,
+                DataFormat.CSV
         );
 
         assertEquals(1L, sampleResponse.id());
