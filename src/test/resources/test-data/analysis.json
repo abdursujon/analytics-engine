@@ -1,12 +1,45 @@
 {
-  "id" : 8,
-  "numberOfRows" : 3,
-  "numberOfColumns" : 3,
-  "totalCharacters" : 106,
+  "id" : 9,
+  "numberOfRows" : 20000,
+  "numberOfColumns" : 5,
+  "totalCharacters" : 1468536,
   "columnStatistics" : [ {
-    "columnName" : "driver",
+    "columnName" : "id",
     "nullCount" : 0,
-    "uniqueCount" : 3,
+    "uniqueCount" : 20000,
+    "isNumeric" : true,
+    "min" : 1.0,
+    "max" : 20000.0,
+    "mean" : 10000.5,
+    "median" : 10000.5,
+    "standardDeviation" : 5773.502684679379,
+    "percentiles" : [ 5000.75, 10000.5, 15000.25, 18000.100000000002, 19000.05, 19800.01 ]
+  }, {
+    "columnName" : "score",
+    "nullCount" : 0,
+    "uniqueCount" : 20000,
+    "isNumeric" : true,
+    "min" : 2.0,
+    "max" : 40000.0,
+    "mean" : 20001.0,
+    "median" : 20001.0,
+    "standardDeviation" : 11547.005369358758,
+    "percentiles" : [ 10001.5, 20001.0, 30000.5, 36000.200000000004, 38000.1, 39600.02 ]
+  }, {
+    "columnName" : "rank",
+    "nullCount" : 0,
+    "uniqueCount" : 20000,
+    "isNumeric" : true,
+    "min" : 3.0,
+    "max" : 60000.0,
+    "mean" : 30001.5,
+    "median" : 30001.5,
+    "standardDeviation" : 17320.50805403814,
+    "percentiles" : [ 15002.25, 30001.5, 45000.75, 54000.3, 57000.149999999994, 59400.03 ]
+  }, {
+    "columnName" : "name",
+    "nullCount" : 0,
+    "uniqueCount" : 20000,
     "isNumeric" : false,
     "min" : null,
     "max" : null,
@@ -15,20 +48,9 @@
     "standardDeviation" : null,
     "percentiles" : null
   }, {
-    "columnName" : "number",
+    "columnName" : "flag",
     "nullCount" : 0,
-    "uniqueCount" : 3,
-    "isNumeric" : true,
-    "min" : 1.0,
-    "max" : 44.0,
-    "mean" : 20.333333333333332,
-    "median" : 16.0,
-    "standardDeviation" : 17.820088539498215,
-    "percentiles" : [ 8.5, 16.0, 30.0, 38.400000000000006, 41.199999999999996, 43.44 ]
-  }, {
-    "columnName" : "team",
-    "nullCount" : 0,
-    "uniqueCount" : 3,
+    "uniqueCount" : 1,
     "isNumeric" : false,
     "min" : null,
     "max" : null,
@@ -37,6 +59,7 @@
     "standardDeviation" : null,
     "percentiles" : null
   } ],
-  "createdAt" : "2026-05-10T01:31:30.358285+01:00",
-  "alreadyExists" : true
+  "createdAt" : "2026-05-22T01:08:27.911978+01:00",
+  "alreadyExists" : true,
+  "format" : "JSON"
 }

@@ -43,7 +43,7 @@
 - Missing data pattern detection
 - Missing data handling and imputation strategies
 - Column correlation and dependency analysis
-- Redundant and low-information column detection
+- Redundant and low-information column detection ****
 - Anomaly and outlier detection
 - Row-level and column-level validity labeling
 - Dataset quality scoring and risk classification
