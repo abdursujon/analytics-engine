@@ -26,7 +26,7 @@ https://spring-data-analysis-506639246506.europe-west2.run.app/analytics-engine/
   ```bash
   curl -X POST \
     -H "Content-Type: text/csv" \
-    --data-binary @your-file.csv \
+    --data-binary @/home/sujon/Project/analytics-engine/src/test/resources/test-data/csv/large.csv \
     https://spring-data-analysis-506639246506.europe-west2.run.app/analytics-engine/ingestCsv | jq
   ```
 
@@ -130,7 +130,7 @@ The response includes the assigned `id`. You can fetch or download the analysis 
 ```bash
 curl -X POST \
   -H "Content-Type: text/csv" \
-  --data-binary @your-file.csv \
+  --data-binary @/home/sujon/Project/analytics-engine/src/test/resources/test-data/csv/large.csv \
   http://localhost:8080/analytics-engine/ingestCsv | jq
 ```
 

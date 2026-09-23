@@ -26,6 +26,8 @@ public class DataAnalysisResponseDtoUnitTest {
         int numberOfColumns = line[0].split(",").length;
         int totalCharacters = csvData.length();
 
+        NumericCorrelationMatrixDto numericDto = null;
+
         sampleResponse = new DataAnalysisResponseDto(
                 1L,
                 numberOfRows,
@@ -43,6 +45,7 @@ public class DataAnalysisResponseDtoUnitTest {
                         null,
                         null
                 )),
+                numericDto,
                 OffsetDateTime.now(),
                 false,
                 DataFormat.CSV

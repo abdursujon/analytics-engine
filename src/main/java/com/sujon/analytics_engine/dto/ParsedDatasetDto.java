@@ -3,7 +3,7 @@ package com.sujon.analytics_engine.dto;
 import java.util.List;
 import java.util.Set;
 
-public record ParsedDataset(
+public record ParsedDatasetDto(
         String[] columnHeaders,
         int totalRowCount,
         long totalPayloadSize,

@@ -1,6 +1,8 @@
 package  com.sujon.analytics_engine.repository.entity;
 
+import com.sujon.analytics_engine.dto.NumericCorrelationMatrixDto;
 import com.sujon.analytics_engine.model.DataFormat;
+import com.sujon.analytics_engine.repository.converter.NumericCorrelationMatrixJsonConverter;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -56,4 +58,8 @@ public class DataAnalysisEntity {
     @OneToMany(mappedBy = "dataAnalysis", cascade = ALL, orphanRemoval = true, fetch = EAGER)
     @Builder.Default
     private List<ColumnStatisticsEntity> columnStatistics = new ArrayList<>();
+
+    @Convert(converter = NumericCorrelationMatrixJsonConverter.class)
+    @Column(name = "correlation_matrix_json", columnDefinition = "TEXT")
+    private NumericCorrelationMatrixDto numericCorrelationMatrix;
 }

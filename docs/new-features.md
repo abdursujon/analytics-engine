@@ -144,3 +144,20 @@ curl -X POST http://localhost:8080/analytics-engine/ingestJson \
 curl -X POST http://localhost:8080/analytics-engine/ingestNdjson \
 -H "Content-Type: application/x-ndjson" \
 --data-binary @sample.ndjson | jq
+
+# Analysis Improvement New Feature 
+1. Correlation matrix for numeric columns — quantify how strong and what kind of relationship, so we can act on it. 
+## Three concrete uses:
+1. Spot redundancy — r=1.0 means one column is derivable from the other. Drop it, save storage/compute.
+2. Spot data quality bugs — columns that should correlate but don't (e.g. price vs price_after_tax at r=0.4) reveal broken ETL.
+3. Inform downstream work — ML feature selection, dashboard design, join key candidates.
+
+2. Outlier count via IQR rule per numeric column.
+3. Top-K values + frequencies for non-numeric columns (fixes the all-null categorical block).
+4. Completeness score per column and dataset-level (1 - nullCount/rows).
+5. Cardinality ratio + auto-flag: primaryKey (1.0), constant (≈0), categorical, highCardinality.
+6. Inferred semantic type per column (id, measure, category, flag, timestamp, email, etc.).
+7. Histogram bins (10 buckets, counts) — lets downstream charts render without rescanning.
+8. Skewness + kurtosis — distribution shape, signals transform needs (log, etc.).
+9. Duplicate row count at dataset level.
+10. Warnings array — human-readable callouts ("flag is constant", "score↔rank r=0.99", "id looks like a primary key").

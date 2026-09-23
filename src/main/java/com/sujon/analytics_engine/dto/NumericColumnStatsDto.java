@@ -2,7 +2,7 @@ package com.sujon.analytics_engine.dto;
 
 import java.util.List;
 
-public record NumericColumnStats(
+public record NumericColumnStatsDto(
         double minValue,
         double maxValue,
         double meanValue,

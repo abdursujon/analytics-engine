@@ -2,7 +2,7 @@ package com.sujon.analytics_engine.dto;
 
 import java.util.List;
 
-public record NumericCorrelationMatrix(
+public record NumericCorrelationMatrixDto(
         List<String> numericColumnNames,
         List<List<Double>> correlationValues,
         List<CorrelationPair> strongPairs,

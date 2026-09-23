@@ -15,6 +15,7 @@ public record DataAnalysisResponseDto(
         int numberOfColumns,
         long totalCharacters,
         List<ColumnStatistics> columnStatistics,
+        NumericCorrelationMatrixDto numericCorrelationMatrix,
         OffsetDateTime createdAt,
         boolean alreadyExists,
         DataFormat format

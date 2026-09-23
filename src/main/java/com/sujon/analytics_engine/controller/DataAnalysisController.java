@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController   
 @RequestMapping("/analytics-engine")

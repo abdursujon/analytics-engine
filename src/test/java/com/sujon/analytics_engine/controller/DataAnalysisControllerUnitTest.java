@@ -1,6 +1,7 @@
 package com.sujon.analytics_engine.controller;
 
 import com.sujon.analytics_engine.dto.DataAnalysisResponseDto;
+import com.sujon.analytics_engine.dto.NumericCorrelationMatrixDto;
 import com.sujon.analytics_engine.exception.GlobalExceptionHandler;
 import com.sujon.analytics_engine.exception.NotFoundException;
 
@@ -65,6 +66,7 @@ public class DataAnalysisControllerUnitTest {
         );
         Long id = 1L;
         csvDataLength = csvData.length();
+        NumericCorrelationMatrixDto numericDto = null;
 
         sampleResponse = new DataAnalysisResponseDto(
                 id,
@@ -83,6 +85,7 @@ public class DataAnalysisControllerUnitTest {
                         null,
                         null
                 )),
+                numericDto, 
                 OffsetDateTime.now(),
                 false,
                 DataFormat.CSV

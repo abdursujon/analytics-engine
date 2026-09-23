@@ -197,7 +197,39 @@ An HTML report is generated at `build/reports/tests/test/index.html`.
   ```
 
   ---
+## Analyse locally
+**Linux / macOS**
 
+## PARQUET
+  ```bash
+curl -X POST \
+    -F "file=@all-string.parquet" \
+    http://localhost:8080/analytics-engine/ingestParquet | jq
+  ```
+
+# JSON
+  ```bash
+curl -X POST \
+-H "Content-Type: application/json" \
+--data-binary @large.json \
+http://localhost:8080/analytics-engine/ingestJson | jq
+  ```
+
+# NDJSON
+  ```bash
+curl -X POST \
+-H "Content-Type: application/x-ndjson" \
+--data-binary @large.ndjson \
+http://localhost:8080/analytics-engine/ingestNdjson | jq
+ ```
+
+# CSV 
+  ```bash
+curl -X POST \
+-H "Content-Type: text/csv" \
+--data-binary @large.csv \
+http://localhost:8080/analytics-engine/ingestCsv| jq
+ ```
 ## Limitations
 
 This service is intentionally a small, focused component, not a production data platform.

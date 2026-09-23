@@ -47,7 +47,7 @@ public class ColumnStatisticsEntity {
     @Column(name = "max_value")
     private Double maxValue;
 
-    @Column(name = "mean_value")
+    @Column(name = "average_value")
     private Double meanValue;
 
     @Column(name = "median_value")
